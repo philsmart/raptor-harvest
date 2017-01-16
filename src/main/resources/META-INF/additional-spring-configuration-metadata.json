@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "harvest.shibboleth.logfile",
+  "type": "java.lang.String",
+  "description": "The location of the Shibboleth audit logfile 'harvest.logfile.shibboleth'"
+}]}
