@@ -59,7 +59,7 @@ public class Harvester {
 	}
 
 	/**
-	 * Main harvest method which calls all parsers, gathers all the events, the
+	 * Main harvest method which calls all parsers, gathers all the events, then
 	 * pushes them through the {@link #pushPipeline(List)} method. Relies on
 	 * Springs scheduler. No additional scheduler config, so spring should only
 	 * ever create one scheduler thread? - so can assume a single threaded env
@@ -77,6 +77,8 @@ public class Harvester {
 
 	/**
 	 * Simple, hard coded, pre-configured, pipeline used when pushing events.
+	 * First Enrich {@link Event}s by configured {@code enricher}, then push
+	 * events using the configured {@code eventPush}
 	 * 
 	 * @param events
 	 *            the {@link Event}s to push.

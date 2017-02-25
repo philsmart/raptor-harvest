@@ -12,9 +12,9 @@ public class ParseAutoConfiguration {
 
 	@ConditionalOnProperty(prefix = "harvest.shibboleth", name = "logfile")
 	@ConfigurationProperties(prefix = "harvest.shibboleth")
-	@Bean("shibParser")
+	@Bean("shibIdpParser")
 	public LogParser shibbolethParser() {
-		log.info("Creating Shibboleth Log File Parser");
+		log.info("Creating Shibboleth Idp Log File Parser");
 		return new ShibbolethLogParser();
 	}
 

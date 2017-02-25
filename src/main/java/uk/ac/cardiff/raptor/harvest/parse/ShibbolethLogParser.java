@@ -45,6 +45,15 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 		assimilatedEvents = new HashSet<Integer>();
 	}
 
+	/**
+	 * Parse the {@code logfile} assuming a Shibboleth IDP 2.x format. Any new
+	 * loglines are converted to a {@link ShibbolethIdpAuthenticationEvent}
+	 * model type and returned as a {@link Set} of {@link Event}s. *New*
+	 * loglines are determined by checking their eventId against those already
+	 * processed in the {@code assimilatedEvents} {@link Set}.
+	 * 
+	 * @return a nonnull but possibly empty {@link Set} of {@link Event}s.
+	 */
 	@Override
 	@Nonnull
 	public Set<Event> parse() {
@@ -76,6 +85,16 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 		return newEvents;
 	}
 
+	/**
+	 * Unmarshalls a line {@link String} into a
+	 * {@link ShibbolethIdpAuthenticationEvent}.
+	 * 
+	 * @param line
+	 *            the String that represents the
+	 *            {@link ShibbolethIdpAuthenticationEvent}
+	 * @return a {@link ShibbolethIdpAuthenticationEvent} converted from the
+	 *         input {@code line}.
+	 */
 	@Nonnull
 	private ShibbolethIdpAuthenticationEvent unmarshal(@Nullable final String line) {
 		final ShibbolethIdpAuthenticationEvent event = new ShibbolethIdpAuthenticationEvent();
