@@ -1,7 +1,9 @@
 package uk.ac.cardiff.raptor.harvest.comms;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
@@ -53,11 +55,11 @@ public class AmqpEventPusher implements EventPush {
 		amqpTemplate = new RabbitTemplate(connectionFactory());
 		final RetryTemplate retryTemplate = new RetryTemplate();
 		final ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-		backOffPolicy.setInitialInterval(500);
+		backOffPolicy.setInitialInterval(1000);
 		backOffPolicy.setMultiplier(10.0);
 		backOffPolicy.setMaxInterval(10000);
 		retryTemplate.setBackOffPolicy(backOffPolicy);
-		amqpTemplate.setRetryTemplate(retryTemplate);
+		// amqpTemplate.setRetryTemplate(retryTemplate);
 		amqpTemplate.setMessageConverter(messageConverter());
 		amqpTemplate.setExchange(exchange);
 	}
@@ -91,12 +93,22 @@ public class AmqpEventPusher implements EventPush {
 	}
 
 	@Override
-	public void push(final List<Event> events) {
+	@Nonnull
+	public List<Event> push(final List<Event> events) {
 		log.info("AMQP Event Push has recieved {} events to send", events.size());
 
+		final List<Event> failures = new ArrayList<Event>();
+
 		for (final Event event : events) {
-			amqpTemplate.convertAndSend(queue, event);
+			try {
+				amqpTemplate.convertAndSend(queue, event);
+			} catch (final Exception e) {
+				log.error("Failed to send event [{}]", event.getEventId(), e);
+				failures.add(event);
+			}
 		}
+		log.info("AMQP Event Push has {} failures", failures.size());
+		return failures;
 
 	}
 

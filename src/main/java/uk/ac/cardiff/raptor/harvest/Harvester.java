@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import uk.ac.cardiff.model.event.Event;
-import uk.ac.cardiff.raptor.harvest.comms.EventPush;
+import uk.ac.cardiff.raptor.harvest.comms.EventPublisher;
 import uk.ac.cardiff.raptor.harvest.enrich.AttributeEnrichment;
 import uk.ac.cardiff.raptor.harvest.parse.LogParser;
 
@@ -39,17 +40,16 @@ public class Harvester {
 	private List<AttributeEnrichment> enrichers;
 
 	/**
-	 * Client that pushes {@link Event}s as they are retrieved from the set of
-	 * {@link LogParser}s to a suitable endpoint.
+	 * The publisher used to manage the event send lifecycle.
 	 */
-	@Inject
-	private EventPush eventPush;
+	@Resource(name = "DefaultEventPublisher")
+	private EventPublisher eventPublisher;
 
 	@PostConstruct
 	public void validate() {
-		Objects.requireNonNull(eventPush, "Harvester requires an EventPush instance");
+
 		Objects.requireNonNull(parsers, "Harvester MUST be constructer with a list of LogParsers");
-		log.info("Harvester has EventPusher [{}]", eventPush.getClass());
+
 		log.info("Harvester has [{}] parsers", parsers.size());
 		parsers.forEach(parser -> log.info("Parser [{}]", parser.getName()));
 		log.info("Harvester has [{}] enrichers", enrichers != null ? enrichers.size() : "0");
@@ -87,15 +87,7 @@ public class Harvester {
 		if (enrichers != null) {
 			enrichers.forEach(enricher -> enricher.enrich(events));
 		}
-		eventPush.push(events);
-	}
-
-	public EventPush getEventPush() {
-		return eventPush;
-	}
-
-	public void setEventPush(final EventPush eventPush) {
-		this.eventPush = eventPush;
+		eventPublisher.push(events);
 	}
 
 	public List<LogParser> getParsers() {
