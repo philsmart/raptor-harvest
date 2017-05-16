@@ -43,6 +43,7 @@ public class ParseHelper {
 
 	}
 
+	@Nullable
 	public static String[] safeGetStringArray(@Nullable final String[] array, @Nonnull final int index,
 			final String delimeter) {
 

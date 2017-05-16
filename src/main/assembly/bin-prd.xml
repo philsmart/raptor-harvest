@@ -12,13 +12,13 @@
 	
 	  <files>
 		<file>
-			<source>${project.basedir}/config/application.properties</source>
+			<source>${project.basedir}/config/package/application.properties</source>
 			<outputDirectory>${project.build.finalName}/config</outputDirectory>
 			<filtered>true</filtered>
 		</file>
 		
         <file>
-            <source>${project.build.directory}/config/logback.xml</source>
+            <source>${project.build.directory}/config/package/logback.xml</source>
             <outputDirectory>${project.build.finalName}/config</outputDirectory>
             
         </file>
@@ -28,7 +28,7 @@
 			
 		</file>
 		<file>
-			<source>${project.build.directory}/config/run-opts.conf</source>
+			<source>${project.build.directory}/config/package/run-opts.conf</source>
 			<outputDirectory>/</outputDirectory>
 			<destName>${project.build.finalName}/${project.build.finalName}.conf</destName>
 		</file>

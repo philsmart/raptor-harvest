@@ -59,7 +59,8 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 
 			log.trace("ShibEvent [{}]", event);
 		} else {
-			log.warn("Line does not have 12 fields or is null, failing to capture, line is [{}]", line);
+			log.warn("Line does not have 12 fields or is null, failing to capture, returning empty event, line is [{}]",
+					line);
 		}
 
 		return event;

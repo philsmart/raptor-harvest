@@ -11,7 +11,7 @@ public interface LogParser {
 
 	/**
 	 * Functional interface, called to execute the LogParser. A {@link Set} is
-	 * returned, as results are assumed unique. Implementation must only return
+	 * returned, results are assumed unique. Implementation must only return
 	 * *new* events that were not returned by the last call to this method.
 	 * Should always return a Set, even if it is empty.
 	 * 

@@ -15,7 +15,8 @@ import uk.ac.cardiff.model.event.Event;
 public interface EventPush {
 
 	/**
-	 * Push the events using a suitable implementation e.g. AMQP
+	 * Push the events using a suitable implementation e.g. AMQP. Any failed
+	 * events should be returned by the implementation.
 	 * 
 	 * @param events
 	 *            the {@link Event}s to push.

@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cardiff.model.event.Event;
-import uk.ac.cardiff.model.event.ShibbolethIdpAuthenticationEvent;
 
 public abstract class BaseLogFileParser implements LogParser {
 
@@ -40,11 +39,10 @@ public abstract class BaseLogFileParser implements LogParser {
 	protected Set<Integer> latestEntries = new HashSet<Integer>();
 
 	/**
-	 * Parse the {@code logfile} assuming a Shibboleth IDP 2.x format. Any new
-	 * loglines are converted to a {@link ShibbolethIdpAuthenticationEvent}
-	 * model type and returned as a {@link Set} of {@link Event}s. *New*
-	 * loglines are determined by checking their eventId against those already
-	 * processed in the {@code assimilatedEvents} {@link Set}.
+	 * Parse the {@code logfile} assuming a format defined by the implementing
+	 * class of the {@link #unmarshal(String)} method. Any new loglines are
+	 * converted to an {@link Event} or sub type thereof and returned as a
+	 * {@link Set} of {@link Event}s.
 	 * 
 	 * @return a nonnull but possibly empty {@link Set} of {@link Event}s.
 	 */

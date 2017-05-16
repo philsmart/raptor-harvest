@@ -84,12 +84,12 @@
 	<build>
 		<plugins>
 			<plugin>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-maven-plugin</artifactId>
-					<configuration>
-						<executable>true</executable>
-					</configuration>
-				</plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
@@ -101,7 +101,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/config</outputDirectory>
+							<outputDirectory>${basedir}/target/config/package</outputDirectory>
 							<resources>
 								<resource>
 									<directory>config/</directory>
@@ -131,7 +131,15 @@
 					</execution>
 				</executions>
 			</plugin>
-				
+			<plugin>
+				<groupId>com.amashchenko.maven.plugin</groupId>
+				<artifactId>gitflow-maven-plugin</artifactId>
+				<version>1.5.0</version>
+				<configuration>
+					<!-- optional configuration -->
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 

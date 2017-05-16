@@ -14,8 +14,8 @@ import uk.ac.cardiff.model.event.Event;
 public interface AttributeEnrichment {
 
 	/**
-	 * Enrich the {@link List} of {@link Event}s in an implementation specific
-	 * way.
+	 * Enrich the {@link List} of {@link Event}s in whichever way the
+	 * implementing class describes.
 	 * 
 	 * @param events
 	 *            the {@link Event} {@link List} to enrich.
