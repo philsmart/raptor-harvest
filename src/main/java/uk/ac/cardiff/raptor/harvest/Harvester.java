@@ -5,9 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
@@ -15,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import uk.ac.cardiff.model.event.Event;
-import uk.ac.cardiff.raptor.harvest.comms.EventPublisher;
-import uk.ac.cardiff.raptor.harvest.enrich.AttributeEnrichment;
 import uk.ac.cardiff.raptor.harvest.parse.LogParser;
 
 /**
@@ -35,27 +31,17 @@ public class Harvester {
 	@Inject
 	private List<LogParser> parsers;
 
-	@Nullable
 	@Inject
-	private List<AttributeEnrichment> enrichers;
-
-	/**
-	 * The publisher used to manage the event send lifecycle.
-	 */
-	@Resource(name = "DefaultEventPublisher")
-	private EventPublisher eventPublisher;
+	private PushPipeline pipeline;
 
 	@PostConstruct
 	public void validate() {
 
 		Objects.requireNonNull(parsers, "Harvester MUST be constructer with a list of LogParsers");
-
+		Objects.requireNonNull(pipeline, "Must have a PushPipeline configured - this should not happen.");
 		log.info("Harvester has [{}] parsers", parsers.size());
 		parsers.forEach(parser -> log.info("Parser [{}]", parser.getName()));
-		log.info("Harvester has [{}] enrichers", enrichers != null ? enrichers.size() : "0");
-		if (enrichers != null) {
-			enrichers.forEach(enricher -> log.info("Enricher [{}]", enricher.getName()));
-		}
+
 	}
 
 	/**
@@ -72,22 +58,7 @@ public class Harvester {
 				.collect(Collectors.toList());
 
 		log.debug("Has harvested {} new events", allEvents.size());
-		pushPipeline(allEvents);
-	}
-
-	/**
-	 * Simple, hard coded, pre-configured, pipeline used when pushing events.
-	 * First Enrich {@link Event}s by configured {@code enricher}, then push
-	 * events using the configured {@code eventPush}
-	 * 
-	 * @param events
-	 *            the {@link Event}s to push.
-	 */
-	private void pushPipeline(final List<Event> events) {
-		if (enrichers != null) {
-			enrichers.forEach(enricher -> enricher.enrich(events));
-		}
-		eventPublisher.push(events);
+		pipeline.pushPipeline(allEvents);
 	}
 
 	public List<LogParser> getParsers() {

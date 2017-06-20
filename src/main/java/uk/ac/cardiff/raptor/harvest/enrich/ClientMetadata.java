@@ -2,6 +2,8 @@ package uk.ac.cardiff.raptor.harvest.enrich;
 
 import java.util.List;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,6 +14,7 @@ import uk.ac.cardiff.model.event.auxiliary.EventMetadata;
 
 @Component
 @ConfigurationProperties(prefix = "service.metadata")
+@ThreadSafe
 public class ClientMetadata implements AttributeEnrichment {
 
 	private static final Logger log = LoggerFactory.getLogger(AttributeEnrichment.class);

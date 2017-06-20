@@ -1,10 +1,12 @@
 package uk.ac.cardiff.raptor.harvest.comms;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,16 +30,23 @@ import uk.ac.cardiff.model.event.ShibbolethIdpAuthenticationEvent;
  * AMQP Implementation of the {@link EventPush} interface. Sends each
  * {@link Event} as a single AMQP Message encoded with JSON.
  * 
+ * Threadsafe after construction.
+ * 
  * @author philsmart
  *
  */
 
 @ConfigurationProperties(prefix = "event.pusher.amqp")
 @Component
+@ThreadSafe
 public class AmqpEventPusher implements EventPush {
 
 	private static final Logger log = LoggerFactory.getLogger(AmqpEventPusher.class);
 
+	/**
+	 * The RabbitTemplate to send AMQP events. Is threadsafe, so can share
+	 * between threads.
+	 */
 	private RabbitTemplate amqpTemplate;
 
 	private String host;
@@ -49,6 +58,11 @@ public class AmqpEventPusher implements EventPush {
 	private String username = "raptor-user";
 
 	private String password = "raptor-pass";
+
+	/**
+	 * Should always be true for correct execution, can be false for testing.
+	 */
+	private boolean pushEnabled = true;
 
 	@PostConstruct
 	public void setup() {
@@ -95,6 +109,9 @@ public class AmqpEventPusher implements EventPush {
 	@Override
 	@Nonnull
 	public List<Event> push(final List<Event> events) {
+		if (pushEnabled == false) {
+			return Collections.emptyList();
+		}
 		log.info("AMQP Event Push has recieved {} events to send", events.size());
 
 		final List<Event> failures = new ArrayList<Event>();
@@ -150,6 +167,21 @@ public class AmqpEventPusher implements EventPush {
 
 	public void setExchange(final String exchange) {
 		this.exchange = exchange;
+	}
+
+	/**
+	 * @return the pushEnabled
+	 */
+	public boolean isPushEnabled() {
+		return pushEnabled;
+	}
+
+	/**
+	 * @param pushEnabled
+	 *            the pushEnabled to set
+	 */
+	public void setPushEnabled(final boolean pushEnabled) {
+		this.pushEnabled = pushEnabled;
 	}
 
 }

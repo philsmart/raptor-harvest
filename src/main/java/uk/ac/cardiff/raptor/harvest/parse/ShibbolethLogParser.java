@@ -10,7 +10,10 @@ import org.slf4j.LoggerFactory;
 import uk.ac.cardiff.model.event.ShibbolethIdpAuthenticationEvent;
 
 /**
- * Class to parse Shibboleth Identity Provider 2.x audit log files.
+ * Class to parse Shibboleth Identity Provider 2.x audit log files. Should
+ * create a new instance of this class for each different logfile that is parsed
+ * (can not be shared for different log files, as keeps track of last entry
+ * parsed).
  * 
  * @author philsmart
  *

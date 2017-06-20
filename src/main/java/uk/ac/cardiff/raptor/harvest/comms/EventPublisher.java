@@ -29,6 +29,7 @@ public class EventPublisher {
 	/**
 	 * A queue of failed events.These should be retried.
 	 */
+	// TODO batch and normal access at the same time, make thread-safe?
 	private final List<Event> failedEventsQueue = new ArrayList<Event>();
 
 	@PostConstruct
@@ -46,6 +47,7 @@ public class EventPublisher {
 	 * @param events
 	 *            the {@link Event}s to send.
 	 */
+	// TODO where is retry?
 	public void push(final List<Event> events) {
 
 		final List<Event> failures = eventPush.push(events);
