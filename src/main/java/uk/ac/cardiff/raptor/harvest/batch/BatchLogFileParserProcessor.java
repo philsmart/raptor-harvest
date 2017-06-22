@@ -45,8 +45,6 @@ public class BatchLogFileParserProcessor {
 	 */
 	public void parsePush() {
 
-		log.info("Batch parser [{}] has started...", batchParserName);
-
 		final Path directory = Paths.get(batchDirectory.trim());
 
 		if (directory.toFile().isDirectory() == false) {
@@ -54,18 +52,19 @@ public class BatchLogFileParserProcessor {
 			return;
 		}
 
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory,
+		try (final DirectoryStream<Path> stream = Files.newDirectoryStream(directory,
 				path -> path.toString().endsWith(".log"))) {
 
 			for (final Path file : stream) {
-				log.debug("Parsing log file [{}]", file);
+				log.debug("[{}] Parsing log file [{}]", batchParserName, file);
 				final Set<Event> events = parser.parse(file);
 				log.info("Has parsed {} events from {}, now sending", events.size(), file);
 				pipeline.pushPipeline(new ArrayList<Event>(events));
+				Files.move(file, Paths.get(file.toString() + ".done"));
 			}
 
 		} catch (final IOException e1) {
-			log.error("Can not iterate through files in the directory, no parsing for {}ph", this, e1);
+			log.error("Error trying to stream directory {}", batchDirectory, e1);
 			return;
 		}
 
