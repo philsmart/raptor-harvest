@@ -1,20 +1,22 @@
 package uk.ac.cardiff.raptor.harvest.batch;
 
+import java.nio.file.Path;
 import java.util.Set;
-
-import javax.annotation.Nonnull;
 
 import uk.ac.cardiff.model.event.Event;
 
 public interface BatchLogFileParser {
 
 	/**
-	 * Pares all events from all logfiles from the configured directory (see
-	 * {@link BaseBatchLogFileParser}
+	 * Call to the concrete implementation to do the actual parsing. Of note the
+	 * concrete implementation of this method should be thread safe, as it
+	 * *could* be parallel streamed by the {@link #parsePush()} method in the
+	 * future.
 	 * 
-	 * @return
+	 * @param fileToParse
+	 *            the {@link Path} of the file to parse
+	 * @return a {@link Set} of {@link Event}s.
 	 */
-	@Nonnull
-	Set<Event> parse();
+	Set<Event> parse(Path fileToParse);
 
 }
