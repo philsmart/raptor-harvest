@@ -63,10 +63,11 @@ public abstract class BaseLogFileParser implements LogParser {
 
 			}
 
-			log.info("Shibboleth Parsers has parsed {} new events", newEvents.size());
+			log.info("Shibboleth Parser has parsed {} new events", newEvents.size());
 
 		} catch (final Exception e) {
-			e.printStackTrace();
+			log.error("Error parsing log file", e);
+
 		}
 		return newEvents;
 	}

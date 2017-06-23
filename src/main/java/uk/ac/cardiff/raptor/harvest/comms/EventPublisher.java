@@ -7,6 +7,7 @@ import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.hibernate.annotations.Synchronize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -41,12 +42,15 @@ public class EventPublisher {
 	/**
 	 * Push the {@link List} of events to the configured {@link EventPush}
 	 * interface. Handles the push life-cycle. Keeps record of any failures for
-	 * retry.
+	 * retry. This method is {@link Synchronize}d in case it is called from
+	 * multiple threads - this is to prevents concurrent access to the
+	 * {@code failedEventsQueue}.
 	 * 
 	 * @param events
 	 *            the {@link Event}s to send.
 	 */
-	public void push(final List<Event> events) {
+	// TODO where is retry?
+	public synchronized void push(final List<Event> events) {
 
 		final List<Event> failures = eventPush.push(events);
 		if (failures.isEmpty() == false) {
