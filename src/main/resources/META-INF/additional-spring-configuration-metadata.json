@@ -8,5 +8,10 @@
     "name": "harvest.shibboleth.batch-directory",
     "type": "java.lang.String",
     "description": "The path to the root directory of shibboleth logfiles for parsing. 'harvest.shibboleth.batch-directory'"
+  },
+  {
+    "name": "harvest.ezproxy.logfile",
+    "type": "java.lang.String",
+    "description": "A description for 'harvest.ezproxy.logfile'"
   }
 ]}

@@ -38,7 +38,7 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 		if (line == null) {
 			return event;
 		}
-		log.trace("{}", line);
+
 		final String[] splitLine = line.split("\\|", 12);
 
 		// log.debug("Has split event line into {} fields", splitLine.length);
