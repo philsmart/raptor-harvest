@@ -5,7 +5,7 @@
 
 	<groupId>uk.ac.cardiff.raptor.harvest</groupId>
 	<artifactId>raptor-harvest</artifactId>
-	<version>0.1.1</version>
+	<version>0.3.0</version>
 	<packaging>jar</packaging>
 
 	<name>raptor-harvest</name>
@@ -110,11 +110,13 @@
 							</resources>
 						</configuration>
 					</execution>
+					
 				</executions>
 			</plugin>
+			
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-
+				<version>2.5.1</version> <!-- newer spring boot version 2.6 is different -->
 				<configuration>
 					<appendAssemblyId>true</appendAssemblyId>
 					<descriptors>

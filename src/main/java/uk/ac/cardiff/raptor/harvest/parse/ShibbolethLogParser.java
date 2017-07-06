@@ -38,7 +38,7 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 		if (line == null) {
 			return event;
 		}
-		log.trace("{}", line);
+
 		final String[] splitLine = line.split("\\|", 12);
 
 		// log.debug("Has split event line into {} fields", splitLine.length);
@@ -59,6 +59,13 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 			event.setAssertions(ParseHelper.safeGetStringArray(splitLine, 12, ","));
 
 			event.setEventId(event.hashCode());
+
+			if (event.getMessageProfileId().contains(":sso") == false) {
+				log.trace(
+						"Did NOT include ShibEvent, as the message profile id did not contain ':sso', returning an empty event for dismissal. Event was [{}]",
+						event);
+				return new ShibbolethIdpAuthenticationEvent();
+			}
 
 			log.trace("ShibEvent [{}]", event);
 		} else {

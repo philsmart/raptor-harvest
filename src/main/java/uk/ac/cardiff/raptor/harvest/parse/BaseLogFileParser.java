@@ -12,10 +12,12 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cardiff.model.event.Event;
+import uk.ac.cardiff.raptor.harvest.parse.filter.LineFilterEngine;
 
 public abstract class BaseLogFileParser implements LogParser {
 
@@ -24,13 +26,29 @@ public abstract class BaseLogFileParser implements LogParser {
 	 */
 	private static final Logger log = LoggerFactory.getLogger(BaseLogFileParser.class);
 
+	/**
+	 * UNC Path to the logfile. If appended with DATE, todays date in format X
+	 * replaces it.
+	 */
 	protected String logfile;
+
+	/**
+	 * if the {@code logfile} has the string DATE in it, todays date in the
+	 * format specified by {@code logFileNameDateFormat} replaces it.
+	 */
+	private String logfileNameDateFormat;
 
 	/**
 	 * The time in ms since Unix EPOCH of the last event parsed. Used as an
 	 * indicator of progress.
 	 */
 	protected long latestTimeSinceEpochParsed;
+
+	/**
+	 * Engine that determines (if configured) if the line is suitable for
+	 * unmarshalling.
+	 */
+	private LineFilterEngine lineFilter;
 
 	/**
 	 * A set of eventIds which have the same timestamp as the
@@ -52,18 +70,30 @@ public abstract class BaseLogFileParser implements LogParser {
 
 		final Set<Event> newEvents = new HashSet<Event>();
 
-		try (final Stream<String> stream = Files.lines(Paths.get(logfile), Charset.defaultCharset())) {
+		final String logfileName = construct();
+
+		try (final Stream<String> stream = Files.lines(Paths.get(logfileName), Charset.defaultCharset())) {
 
 			for (final Iterator<String> it = stream.iterator(); it.hasNext();) {
 				final String line = it.next();
-				final Event authE = unmarshal(line);
-				if (isNewEvent(authE)) {
-					newEvents.add(authE);
+
+				boolean parseLine = true;
+				if (lineFilter != null) {
+
+					parseLine = lineFilter.isParsableLine(line);
+				}
+				log.trace("Parse {}: {}", parseLine, line);
+				if (parseLine) {
+					final Event authE = unmarshal(line);
+
+					if (authE.getEventId() != 0 && isNewEvent(authE)) {
+						newEvents.add(authE);
+					}
 				}
 
 			}
 
-			log.info("Shibboleth Parser has parsed {} new events", newEvents.size());
+			log.info("Parser has parsed {} new events", newEvents.size());
 
 		} catch (final Exception e) {
 			log.error("Error parsing log file", e);
@@ -72,9 +102,29 @@ public abstract class BaseLogFileParser implements LogParser {
 		return newEvents;
 	}
 
+	private String construct() {
+		if (logfile != null && logfile.contains("DATE") && logfileNameDateFormat != null) {
+			log.info("Constructing logfile name with DATE, using format {}", logfileNameDateFormat);
+			final DateTime now = DateTime.now();
+			try {
+				final String dateString = now.toString(logfileNameDateFormat);
+				return logfile.replace("DATE", dateString);
+			} catch (final IllegalArgumentException e) {
+				log.error("Could not construct logfile name from [{},using date {}]", logfile, logfileNameDateFormat,
+						e);
+				return logfile;
+			}
+		} else {
+			return logfile;
+		}
+	}
+
 	/**
 	 * Unmarshalls a line {@link String} into a {@link Event} or specialisation
-	 * thereof (delegated to implementing class).
+	 * thereof (delegated to implementing class). Any event that is returned
+	 * must include an eventID otherwise it is omitted - this can be used to
+	 * exclude certain events if they are deemed parsable by the
+	 * {@link LineFilterEngine} but not by the concrete parsers.
 	 * 
 	 * @param line
 	 *            the String that represents the {@link Event} could be null.
@@ -153,6 +203,36 @@ public abstract class BaseLogFileParser implements LogParser {
 
 	public void setLogfile(final String logfile) {
 		this.logfile = logfile;
+	}
+
+	/**
+	 * @return the lineFilter
+	 */
+	public LineFilterEngine getLineFilter() {
+		return lineFilter;
+	}
+
+	/**
+	 * @param lineFilter
+	 *            the lineFilter to set
+	 */
+	public void setLineFilter(final LineFilterEngine lineFilter) {
+		this.lineFilter = lineFilter;
+	}
+
+	/**
+	 * @return the logFileNameDateFormat
+	 */
+	public String getLogfileNameDateFormat() {
+		return logfileNameDateFormat;
+	}
+
+	/**
+	 * @param logFileNameDateFormat
+	 *            the logFileNameDateFormat to set
+	 */
+	public void setLogfileNameDateFormat(final String logfileNameDateFormat) {
+		this.logfileNameDateFormat = logfileNameDateFormat;
 	}
 
 }
