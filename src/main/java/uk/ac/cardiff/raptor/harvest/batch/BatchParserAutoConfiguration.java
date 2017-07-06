@@ -28,4 +28,18 @@ public class BatchParserAutoConfiguration {
 
 	}
 
+	@ConditionalOnProperty(prefix = "harvest.ezproxy", name = "batch-directory")
+	@ConfigurationProperties(prefix = "harvest.ezproxy")
+	@Bean("ezproxyBatchParser")
+	public BatchLogFileParserProcessor ezproxyParser() {
+		log.info("Creating Ezproxy Batch Parser");
+		final BatchLogFileParserProcessor ezproxyProcessor = new BatchLogFileParserProcessor();
+		ezproxyProcessor.setParser(new EzproxyBatchLogFileParser());
+		ezproxyProcessor.setBatchParserName("Ezproxy Batch File Parser");
+		// batch directory is auto configured by Spring.
+
+		return ezproxyProcessor;
+
+	}
+
 }

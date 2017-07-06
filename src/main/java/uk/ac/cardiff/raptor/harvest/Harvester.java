@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import uk.ac.cardiff.model.event.Event;
@@ -28,7 +29,7 @@ public class Harvester {
 	/**
 	 * List of {@link LogParser}s auto-configured
 	 */
-	@Inject
+	@Autowired(required = false)
 	private List<LogParser> parsers;
 
 	@Inject
@@ -37,10 +38,11 @@ public class Harvester {
 	@PostConstruct
 	public void validate() {
 
-		Objects.requireNonNull(parsers, "Harvester MUST be constructer with a list of LogParsers");
 		Objects.requireNonNull(pipeline, "Must have a PushPipeline configured - this should not happen.");
-		log.info("Harvester has [{}] parsers", parsers.size());
-		parsers.forEach(parser -> log.info("Parser [{}]", parser.getName()));
+		log.info("Harvester has [{}] parsers", parsers == null ? "0" : parsers.size());
+		if (parsers != null) {
+			parsers.forEach(parser -> log.info("Parser [{}]", parser.getName()));
+		}
 
 	}
 
@@ -54,11 +56,13 @@ public class Harvester {
 	 */
 	@Scheduled(initialDelay = 5000, fixedDelay = 50000)
 	public void harvest() {
-		final List<Event> allEvents = parsers.stream().map(LogParser::parse).flatMap(Set::stream)
-				.collect(Collectors.toList());
+		if (parsers != null) {
+			final List<Event> allEvents = parsers.stream().map(LogParser::parse).flatMap(Set::stream)
+					.collect(Collectors.toList());
 
-		log.debug("Has harvested {} new events", allEvents.size());
-		pipeline.pushPipeline(allEvents);
+			log.debug("Has harvested {} new events", allEvents.size());
+			pipeline.pushPipeline(allEvents);
+		}
 	}
 
 	public List<LogParser> getParsers() {

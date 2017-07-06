@@ -20,6 +20,7 @@ public class ParseAutoConfiguration {
 	@Bean("shibIdpParser")
 	public LogParser shibbolethParser() {
 		log.info("Creating Shibboleth Idp Log File Parser");
+
 		return new ShibbolethLogParser();
 	}
 
@@ -44,7 +45,6 @@ public class ParseAutoConfiguration {
 
 		final EzproxyLogFileParser ezproxyParser = new EzproxyLogFileParser();
 		ezproxyParser.setLineFilter(lfe);
-		;
 
 		return ezproxyParser;
 	}

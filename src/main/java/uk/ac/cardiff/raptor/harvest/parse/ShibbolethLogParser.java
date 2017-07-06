@@ -60,6 +60,13 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 
 			event.setEventId(event.hashCode());
 
+			if (event.getMessageProfileId().contains(":sso") == false) {
+				log.trace(
+						"Did NOT include ShibEvent, as the message profile id did not contain ':sso', returning an empty event for dismissal. Event was [{}]",
+						event);
+				return new ShibbolethIdpAuthenticationEvent();
+			}
+
 			log.trace("ShibEvent [{}]", event);
 		} else {
 			log.warn("Line does not have 12 fields or is null, failing to capture, returning empty event, line is [{}]",
