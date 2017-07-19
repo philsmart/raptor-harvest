@@ -1,5 +1,8 @@
 package uk.ac.cardiff.raptor.harvest.parse;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,6 +68,12 @@ public class EzproxyLogFileParser extends BaseLogFileParser {
 			String resourceId = retain(splitLine[6],
 					"url=http%3a%2f%2f[^%]*|url=https://[^/]*|url=https%3a%2f%2f[^%]*|url=http://[^/]*|url=%2520http%3a%2f%2f[^%]*|url=%2520https%3a%2f%2f[^%]*|url=%20http%3a%2f%2f[^%]*|url=%20https%3a%2f%2f[^%]*|url=http%253A%252F%252F[^%]*",
 					true);
+
+			try {
+				resourceId = URLDecoder.decode(resourceId, StandardCharsets.UTF_8.toString());
+			} catch (final UnsupportedEncodingException e) {
+				log.warn("Could not URL decode the resourceID, resourceID was [{}]", resourceId);
+			}
 
 			if (resourceId != null) {
 				resourceId = resourceId.replace("url=", "").replaceAll("%2520", "");
