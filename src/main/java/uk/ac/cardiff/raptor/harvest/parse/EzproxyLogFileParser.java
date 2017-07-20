@@ -62,7 +62,7 @@ public class EzproxyLogFileParser extends BaseLogFileParser {
 			event.setSessionId(ParseHelper.safeGetString(splitLine, 1));
 			event.setRequesterIp(ParseHelper.safeGetString(splitLine, 0));
 
-			final String serviceHost = retain(splitLine[6], "https://[^:]*", false);
+			final String serviceHost = retain(splitLine[6], "https://[^:]*|http://[^:]*", false);
 			event.setServiceHost(serviceHost);
 
 			String resourceId = retain(splitLine[6],
