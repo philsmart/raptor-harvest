@@ -158,7 +158,7 @@ public class EzproxyLogFileParserTest {
 		assertThat(event).isInstanceOf(EzproxyAuthenticationEvent.class);
 
 		final EzproxyAuthenticationEvent ezevent = (EzproxyAuthenticationEvent) event;
-		assertThat(ezevent.getEventTimeMillis()).isEqualTo(1498176595000l);
+		assertThat(ezevent.getEventTimeMillis()).isEqualTo(1497665197000L);
 
 		assertThat(ezevent.getResourceId()).isEqualTo("https://search.proquest.com");
 		assertThat(ezevent.getServiceHost()).isEqualTo("http://abc.cardiff.ac.uk");
