@@ -60,7 +60,8 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 
 			event.setEventId(event.hashCode());
 
-			if (event.getMessageProfileId().contains(":sso") == false) {
+			if (event.getMessageProfileId().contains(":sso") == false
+					&& event.getMessageProfileId().contains("sso/browser") == false) {
 				log.trace(
 						"Did NOT include ShibEvent, as the message profile id did not contain ':sso', returning an empty event for dismissal. Event was [{}]",
 						event);

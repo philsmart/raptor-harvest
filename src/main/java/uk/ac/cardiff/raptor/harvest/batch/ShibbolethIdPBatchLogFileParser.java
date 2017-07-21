@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cardiff.model.event.Event;
+import uk.ac.cardiff.raptor.harvest.parse.LogParserFactory;
 import uk.ac.cardiff.raptor.harvest.parse.ShibbolethLogParser;
 
 @ThreadSafe
@@ -18,7 +19,7 @@ public class ShibbolethIdPBatchLogFileParser implements BatchLogFileParser {
 
 	@Override
 	public Set<Event> parse(final Path fileToParse) {
-		final ShibbolethLogParser parser = new ShibbolethLogParser();
+		final ShibbolethLogParser parser = LogParserFactory.newShibbolethLogParser();
 		parser.setLogfile(fileToParse.toString());
 		return parser.parse();
 
