@@ -7,12 +7,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import uk.ac.cardiff.raptor.harvest.parse.ShibbolethLogParser;
-
 @Configuration
 public class BatchParserAutoConfiguration {
 
-	private static final Logger log = LoggerFactory.getLogger(ShibbolethLogParser.class);
+	private static final Logger log = LoggerFactory.getLogger(BatchParserAutoConfiguration.class);
 
 	@ConditionalOnProperty(prefix = "harvest.shibboleth", name = "batch-directory")
 	@ConfigurationProperties(prefix = "harvest.shibboleth")
