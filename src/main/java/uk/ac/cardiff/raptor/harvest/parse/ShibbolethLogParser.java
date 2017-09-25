@@ -50,18 +50,17 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 			event.setRequestBinding(ParseHelper.safeGetString(splitLine, 1));
 			event.setRequestId(ParseHelper.safeGetString(splitLine, 2));
 			event.setResourceId(ParseHelper.safeGetString(splitLine, 3));
-			event.setMessageProfileId(ParseHelper.safeGetString(splitLine, 4));
+
+			final String messageProfileId = ParseHelper.safeGetString(splitLine, 4);
+
 			event.setResponseBinding(ParseHelper.safeGetString(splitLine, 6));
-			event.setResponseId(ParseHelper.safeGetString(splitLine, 7));
 			event.setPrincipalName(ParseHelper.safeGetString(splitLine, 8));
 			event.setAuthenticationType(ParseHelper.safeGetString(splitLine, 9));
 			event.setAttributes(ParseHelper.safeGetStringArray(splitLine, 10, ","));
-			event.setAssertions(ParseHelper.safeGetStringArray(splitLine, 12, ","));
 
 			event.setEventId(event.hashCode());
 
-			if (event.getMessageProfileId().contains(":sso") == false
-					&& event.getMessageProfileId().contains("sso/browser") == false) {
+			if (messageProfileId.contains(":sso") == false && messageProfileId.contains("sso/browser") == false) {
 				log.trace(
 						"Did NOT include ShibEvent, as the message profile id did not contain ':sso', returning an empty event for dismissal. Event was [{}]",
 						event);
@@ -79,7 +78,7 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 
 	@Override
 	public String getName() {
-		return "Shibboleth IDP 2.x LogFile Parser";
+		return "Shibboleth IDP 2.x/.3.x LogFile Parser";
 
 	}
 

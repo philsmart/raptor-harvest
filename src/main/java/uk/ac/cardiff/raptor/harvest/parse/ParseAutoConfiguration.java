@@ -23,7 +23,7 @@ public class ParseAutoConfiguration {
 	@ConfigurationProperties(prefix = "harvest.ezproxy")
 	@Bean("ezproxyParser")
 	public LogParser ezproxyParser() {
-
+		log.info("Creating EzEproxy Log File Parser");
 		return LogParserFactory.newEzproxyLogFileParser();
 	}
 
