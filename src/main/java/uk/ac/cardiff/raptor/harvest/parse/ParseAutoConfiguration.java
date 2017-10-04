@@ -19,6 +19,15 @@ public class ParseAutoConfiguration {
 		return LogParserFactory.newShibbolethLogParser();
 	}
 
+	@ConditionalOnProperty(prefix = "harvest.shibbolethv3", name = "logfile")
+	@ConfigurationProperties(prefix = "harvest.shibbolethv3")
+	@Bean("shibIdpParser")
+	public LogParser shibbolethV3Parser() {
+		log.info("Creating Shibboleth V3 Idp Log File Parser");
+
+		return LogParserFactory.newShibbolethLogParser();
+	}
+
 	@ConditionalOnProperty(prefix = "harvest.ezproxy", name = "logfile")
 	@ConfigurationProperties(prefix = "harvest.ezproxy")
 	@Bean("ezproxyParser")

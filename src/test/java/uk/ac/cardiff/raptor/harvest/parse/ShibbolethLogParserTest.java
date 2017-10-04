@@ -21,7 +21,7 @@ public class ShibbolethLogParserTest {
 	@Test
 	public void testParseIdp3() throws IOException {
 
-		final ShibbolethLogParser parser = LogParserFactory.newShibbolethLogParser();
+		final ShibbolethV3LogParser parser = LogParserFactory.newShibbolethV3LogParser();
 
 		// create tmp file
 		final Path tmpLogFile = Files.createTempFile("shibboleth-test-logfile", "log");
@@ -40,6 +40,8 @@ public class ShibbolethLogParserTest {
 		events.forEach(e -> log.debug("Has Parsed {}", e));
 		assertThat(events).hasSize(1);
 
+		assertThat(events.iterator().next().getResourceId()).isEqualTo("https://squiz.cardiff.ac.uk/shibboleth-sp");
+
 		// delete file on exit
 		tmpLogFile.toFile().delete();
 	}
@@ -47,7 +49,7 @@ public class ShibbolethLogParserTest {
 	@Test
 	public void testParseOmittedIdp3() throws IOException {
 
-		final ShibbolethLogParser parser = LogParserFactory.newShibbolethLogParser();
+		final ShibbolethV3LogParser parser = LogParserFactory.newShibbolethV3LogParser();
 
 		// create tmp file
 		final Path tmpLogFile = Files.createTempFile("shibboleth-test-logfile", "log");
