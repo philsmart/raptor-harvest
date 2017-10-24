@@ -45,8 +45,8 @@ public class AmqpEventPusher implements EventPush {
 	private static final Logger log = LoggerFactory.getLogger(AmqpEventPusher.class);
 
 	/**
-	 * The RabbitTemplate to send AMQP events. Is threadsafe, so can share
-	 * between threads.
+	 * The RabbitTemplate to send AMQP events. Is threadsafe, so can share between
+	 * threads.
 	 */
 	private RabbitTemplate amqpTemplate;
 
@@ -60,6 +60,8 @@ public class AmqpEventPusher implements EventPush {
 
 	private String password = "raptor-pass";
 
+	private final boolean useSSL = false;
+
 	/**
 	 * Should always be true for correct execution, can be false for testing.
 	 */
@@ -67,6 +69,9 @@ public class AmqpEventPusher implements EventPush {
 
 	@PostConstruct
 	public void setup() throws Exception {
+
+		log.info("Setting up an AMQPEventPusher using queue [{}], exchange [{}], username [{}], SSL [{}], host [{}]",
+				queue, exchange, username, useSSL, host);
 
 		amqpTemplate = new RabbitTemplate(connectionFactory());
 		final RetryTemplate retryTemplate = new RetryTemplate();
@@ -78,7 +83,7 @@ public class AmqpEventPusher implements EventPush {
 		amqpTemplate.setRetryTemplate(retryTemplate);
 		amqpTemplate.setMessageConverter(messageConverter());
 		amqpTemplate.setExchange(exchange);
-		// amqpTemplate.setS
+
 	}
 
 	private Jackson2JsonMessageConverter messageConverter() {
@@ -102,7 +107,7 @@ public class AmqpEventPusher implements EventPush {
 
 	private ConnectionFactory connectionFactory() throws Exception {
 		final RabbitConnectionFactoryBean rabbitCon = new RabbitConnectionFactoryBean();
-		rabbitCon.setUseSSL(true);
+		rabbitCon.setUseSSL(useSSL);
 		rabbitCon.setUsername(username);
 		rabbitCon.setPassword(password);
 		rabbitCon.setHost(host);

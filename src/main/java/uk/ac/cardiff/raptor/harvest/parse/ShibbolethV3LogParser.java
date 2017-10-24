@@ -27,7 +27,7 @@ public class ShibbolethV3LogParser extends BaseLogFileParser {
 
 	@PostConstruct
 	public void init() {
-		log.info("Created Shibboleth log file parser, for log file [{}]", getLogfile());
+		log.info("Created Shibboleth version 3.x log file parser, for log file [{}]", getLogfile());
 
 	}
 
@@ -59,6 +59,7 @@ public class ShibbolethV3LogParser extends BaseLogFileParser {
 			event.setPrincipalName(ParseHelper.safeGetString(splitLine, 8));
 			event.setAuthenticationType(ParseHelper.safeGetString(splitLine, 9));
 			event.setAttributes(ParseHelper.safeGetStringArray(splitLine, 10, ","));
+			event.setServiceId(idpEntityId);
 
 			event.setEventId(event.hashCode());
 

@@ -39,9 +39,9 @@ public class IdpEntityIdEnricher implements AttributeEnrichment {
 		log.info("Enriching ShibbolethIdpAuthenticationEvents in the input list of size {}", events.size());
 		for (final Event event : events) {
 			if (event instanceof ShibbolethIdpAuthenticationEvent) {
-				if (((ShibbolethIdpAuthenticationEvent) event).getIdpEntityId() == null && idpEntityID != null) {
-					log.trace("Adding idpEntityIdp [{}] to event [{}]", idpEntityID, event.getEventId());
-					((ShibbolethIdpAuthenticationEvent) event).setIdpEntityId(idpEntityID);
+				if (((ShibbolethIdpAuthenticationEvent) event).getServiceId() == null && idpEntityID != null) {
+					log.trace("Adding idpEntityIdp [{}] as serviceId to event [{}]", idpEntityID, event.getEventId());
+					((ShibbolethIdpAuthenticationEvent) event).setServiceId(idpEntityID);
 				}
 			}
 		}

@@ -27,7 +27,7 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 
 	@PostConstruct
 	public void init() {
-		log.info("Created Shibboleth log file parser, for log file [{}]", getLogfile());
+		log.info("Created Shibboleth version 2.x log file parser, for log file [{}]", getLogfile());
 
 	}
 

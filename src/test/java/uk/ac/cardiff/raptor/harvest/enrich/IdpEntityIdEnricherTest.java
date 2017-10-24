@@ -31,7 +31,7 @@ public class IdpEntityIdEnricherTest {
 		assertThat(events.size()).isEqualTo(1);
 		assertThat(events.get(0)).isInstanceOf(ShibbolethIdpAuthenticationEvent.class);
 		final ShibbolethIdpAuthenticationEvent shibE = (ShibbolethIdpAuthenticationEvent) events.get(0);
-		assertThat(shibE.getIdpEntityId()).isEqualTo("http://idp.test.org/shibboleth");
+		assertThat(shibE.getServiceId()).isEqualTo("http://idp.test.org/shibboleth");
 	}
 
 	@Test
@@ -40,7 +40,7 @@ public class IdpEntityIdEnricherTest {
 		enricher.setIdpEntityID("http://idp.test.org/shibboleth");
 
 		final ShibbolethIdpAuthenticationEvent mockEvent = new ShibbolethIdpAuthenticationEvent();
-		mockEvent.setIdpEntityId("http://idp.test.org/original");
+		mockEvent.setServiceId("http://idp.test.org/original");
 
 		final List<Event> events = new ArrayList<Event>();
 		events.add(mockEvent);
@@ -49,7 +49,7 @@ public class IdpEntityIdEnricherTest {
 		assertThat(events.size()).isEqualTo(1);
 		assertThat(events.get(0)).isInstanceOf(ShibbolethIdpAuthenticationEvent.class);
 		final ShibbolethIdpAuthenticationEvent shibE = (ShibbolethIdpAuthenticationEvent) events.get(0);
-		assertThat(shibE.getIdpEntityId()).isEqualTo("http://idp.test.org/original");
+		assertThat(shibE.getServiceId()).isEqualTo("http://idp.test.org/original");
 	}
 
 	@Test
