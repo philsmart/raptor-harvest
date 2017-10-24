@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.cardiff.model.event.Event;
+import uk.ac.cardiff.model.event.ShibbolethIdpAuthenticationEvent;
 
 public class ShibbolethLogParserTest {
 
@@ -21,7 +22,7 @@ public class ShibbolethLogParserTest {
 	@Test
 	public void testParseIdp3() throws IOException {
 
-		final ShibbolethLogParser parser = LogParserFactory.newShibbolethLogParser();
+		final ShibbolethV3LogParser parser = LogParserFactory.newShibbolethV3LogParser();
 
 		// create tmp file
 		final Path tmpLogFile = Files.createTempFile("shibboleth-test-logfile", "log");
@@ -40,6 +41,21 @@ public class ShibbolethLogParserTest {
 		events.forEach(e -> log.debug("Has Parsed {}", e));
 		assertThat(events).hasSize(1);
 
+		final Event event = events.iterator().next();
+
+		assertThat(event).isInstanceOf(ShibbolethIdpAuthenticationEvent.class);
+
+		final ShibbolethIdpAuthenticationEvent shibAuthE = (ShibbolethIdpAuthenticationEvent) event;
+
+		assertThat(shibAuthE.getResourceId()).isEqualTo("https://squiz.cardiff.ac.uk/shibboleth-sp");
+
+		assertThat(shibAuthE.getRequestBinding()).isEqualTo("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect");
+		assertThat(shibAuthE.getResponseBinding()).isEqualTo("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST");
+		assertThat(shibAuthE.getPrincipalName()).isEqualTo("siscdg");
+		assertThat(shibAuthE.getAuthenticationType())
+				.isEqualTo("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
+		assertThat(shibAuthE.getServiceId()).isEqualTo("https://idp.cardiff.ac.uk/shibboleth");
+
 		// delete file on exit
 		tmpLogFile.toFile().delete();
 	}
@@ -47,7 +63,7 @@ public class ShibbolethLogParserTest {
 	@Test
 	public void testParseOmittedIdp3() throws IOException {
 
-		final ShibbolethLogParser parser = LogParserFactory.newShibbolethLogParser();
+		final ShibbolethV3LogParser parser = LogParserFactory.newShibbolethV3LogParser();
 
 		// create tmp file
 		final Path tmpLogFile = Files.createTempFile("shibboleth-test-logfile", "log");
@@ -91,6 +107,21 @@ public class ShibbolethLogParserTest {
 		log.info("Has parsed {} events", events.size());
 		events.forEach(e -> log.debug("Has Parsed {}", e));
 		assertThat(events).hasSize(1);
+
+		final Event event = events.iterator().next();
+
+		assertThat(event).isInstanceOf(ShibbolethIdpAuthenticationEvent.class);
+
+		final ShibbolethIdpAuthenticationEvent shibAuthE = (ShibbolethIdpAuthenticationEvent) event;
+
+		assertThat(shibAuthE.getResourceId()).isEqualTo("https://squiz.cardiff.ac.uk/shibboleth-sp");
+
+		assertThat(shibAuthE.getRequestBinding()).isEqualTo("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect");
+		assertThat(shibAuthE.getResponseBinding()).isEqualTo("urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST");
+		assertThat(shibAuthE.getPrincipalName()).isEqualTo("c1304440");
+		assertThat(shibAuthE.getAuthenticationType())
+				.isEqualTo("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
+		assertThat(shibAuthE.getServiceId()).isNull();
 
 		// delete file on exit
 		tmpLogFile.toFile().delete();

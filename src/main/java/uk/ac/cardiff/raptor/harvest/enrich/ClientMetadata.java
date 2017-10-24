@@ -1,7 +1,10 @@
 package uk.ac.cardiff.raptor.harvest.enrich;
 
 import java.util.List;
+import java.util.Objects;
 
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.ThreadSafe;
 
 import org.slf4j.Logger;
@@ -19,18 +22,29 @@ public class ClientMetadata implements AttributeEnrichment {
 
 	private static final Logger log = LoggerFactory.getLogger(AttributeEnrichment.class);
 
+	@Nonnull
 	private String organisationName;
 
+	@Nonnull
 	private String entityId;
 
+	@Nonnull
 	private String serviceName;
+
+	@PostConstruct
+	public void validate() {
+		Objects.requireNonNull(organisationName);
+		Objects.requireNonNull(entityId);
+		Objects.requireNonNull(serviceName);
+
+	}
 
 	@Override
 	public void enrich(final List<Event> events) {
 		log.info("Adding ClientMetadata Information to {} events", events.size());
 		for (final Event event : events) {
 			final EventMetadata meta = new EventMetadata();
-			meta.setEntityId(entityId);
+			meta.setRaptorEntityId(entityId);
 			meta.setOrganisationName(organisationName);
 			meta.setServiceName(serviceName);
 			event.setEventMetadata(meta);

@@ -20,6 +20,13 @@ public class LogParserFactory {
 
 	private static final Logger log = LoggerFactory.getLogger(LogParserFactory.class);
 
+	/**
+	 * Factory method to create a new {@link EzproxyLogFileParser}. Sets up a
+	 * number of Regex line filters to capture the correct ezproxy
+	 * authentication events from the exproxy logs.
+	 * 
+	 * @return a {@link EzproxyLogFileParser}.
+	 */
 	public static EzproxyLogFileParser newEzproxyLogFileParser() {
 		log.info("Creating Ezproxy Log File Parser");
 
@@ -42,8 +49,23 @@ public class LogParserFactory {
 		return ezproxyParser;
 	}
 
+	/**
+	 * Factory method to create a new {@link ShibbolethLogParser} (Shibboleth
+	 * V2).
+	 * 
+	 * @return a {@link ShibbolethLogParser}
+	 */
 	public static ShibbolethLogParser newShibbolethLogParser() {
 		return new ShibbolethLogParser();
+	}
+
+	/**
+	 * Factory method to create a new {@link ShibbolethV3LogParser}.
+	 * 
+	 * @return a {@link ShibbolethV3LogParser}
+	 */
+	public static ShibbolethV3LogParser newShibbolethV3LogParser() {
+		return new ShibbolethV3LogParser();
 	}
 
 }

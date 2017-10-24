@@ -59,7 +59,6 @@ public class EzproxyLogFileParser extends BaseLogFileParser {
 			completeDate = completeDate.replace("[", "").replace("]", "");
 			event.setEventTime(ParseHelper.safeGetDateTime(new String[] { completeDate }, 0, "dd/MMM/yyyy:HH:mm:ssZ"));
 
-			event.setSessionId(ParseHelper.safeGetString(splitLine, 1));
 			event.setRequesterIp(ParseHelper.safeGetString(splitLine, 0));
 
 			final String serviceHost = retain(splitLine[6], "https://[^:]*|http://[^:]*", false);
@@ -140,6 +139,11 @@ public class EzproxyLogFileParser extends BaseLogFileParser {
 	 */
 	public void setPrincipalScope(final String principalScope) {
 		this.principalScope = principalScope;
+	}
+
+	@Override
+	public String getName() {
+		return "EzProxy Log File Parser";
 	}
 
 }

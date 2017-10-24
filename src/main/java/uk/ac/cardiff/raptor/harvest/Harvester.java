@@ -48,11 +48,10 @@ public class Harvester {
 
 	/**
 	 * Main harvest method which calls all parsers, gathers all the events, then
-	 * pushes them through the {@link #pushPipeline(List)} method. Relies on
-	 * Springs scheduler. No additional scheduler config, so spring should only
-	 * ever create one scheduler thread? - so can assume a single threaded env
-	 * from this point (although classes should be threadsafe as far as
-	 * possible).
+	 * pushes them through the {@link #pushPipeline(List)} method. Relies on Springs
+	 * scheduler. No additional scheduler config, so spring should only ever create
+	 * one scheduler thread? - so can assume a single threaded env from this point
+	 * (although classes should be threadsafe as far as possible).
 	 */
 	@Scheduled(initialDelay = 5000, fixedDelay = 50000)
 	public void harvest() {
@@ -60,7 +59,7 @@ public class Harvester {
 			final List<Event> allEvents = parsers.stream().map(LogParser::parse).flatMap(Set::stream)
 					.collect(Collectors.toList());
 
-			log.debug("Has harvested {} new events", allEvents.size());
+			log.debug("{} Parsers have harvested {} new events", parsers.size(), allEvents.size());
 			pipeline.pushPipeline(allEvents);
 		}
 	}

@@ -18,16 +18,16 @@ import uk.ac.cardiff.model.event.ShibbolethIdpAuthenticationEvent;
  * @author philsmart
  *
  */
-public class ShibbolethLogParser extends BaseLogFileParser {
+public class ShibbolethV3LogParser extends BaseLogFileParser {
 
 	/**
 	 * Default logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(ShibbolethLogParser.class);
+	private static final Logger log = LoggerFactory.getLogger(ShibbolethV3LogParser.class);
 
 	@PostConstruct
 	public void init() {
-		log.info("Created Shibboleth version 2.x log file parser, for log file [{}]", getLogfile());
+		log.info("Created Shibboleth version 3.x log file parser, for log file [{}]", getLogfile());
 
 	}
 
@@ -53,10 +53,13 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 
 			final String messageProfileId = ParseHelper.safeGetString(splitLine, 4);
 
+			final String idpEntityId = ParseHelper.safeGetString(splitLine, 5);
+
 			event.setResponseBinding(ParseHelper.safeGetString(splitLine, 6));
 			event.setPrincipalName(ParseHelper.safeGetString(splitLine, 8));
 			event.setAuthenticationType(ParseHelper.safeGetString(splitLine, 9));
 			event.setAttributes(ParseHelper.safeGetStringArray(splitLine, 10, ","));
+			event.setServiceId(idpEntityId);
 
 			event.setEventId(event.hashCode());
 
@@ -78,7 +81,7 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 
 	@Override
 	public String getName() {
-		return "Shibboleth IDP 2.x LogFile Parser";
+		return "Shibboleth IDP 3.x LogFile Parser";
 
 	}
 

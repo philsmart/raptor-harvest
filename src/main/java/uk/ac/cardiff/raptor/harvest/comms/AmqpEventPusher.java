@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.connection.RabbitConnectionFactoryBean;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.DefaultClassMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -44,8 +45,8 @@ public class AmqpEventPusher implements EventPush {
 	private static final Logger log = LoggerFactory.getLogger(AmqpEventPusher.class);
 
 	/**
-	 * The RabbitTemplate to send AMQP events. Is threadsafe, so can share
-	 * between threads.
+	 * The RabbitTemplate to send AMQP events. Is threadsafe, so can share between
+	 * threads.
 	 */
 	private RabbitTemplate amqpTemplate;
 
@@ -59,13 +60,20 @@ public class AmqpEventPusher implements EventPush {
 
 	private String password = "raptor-pass";
 
+	private boolean useSsl = false;
+
 	/**
 	 * Should always be true for correct execution, can be false for testing.
 	 */
 	private boolean pushEnabled = true;
 
 	@PostConstruct
-	public void setup() {
+	public void setup() throws Exception {
+
+		log.info(
+				"Setting up an AMQPEventPusher using queue [{}], exchange [{}], username [{}], SSL [{}], host [{}], push-enabled [{}]",
+				queue, exchange, username, useSsl, host, pushEnabled);
+
 		amqpTemplate = new RabbitTemplate(connectionFactory());
 		final RetryTemplate retryTemplate = new RetryTemplate();
 		final ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
@@ -73,9 +81,10 @@ public class AmqpEventPusher implements EventPush {
 		backOffPolicy.setMultiplier(10.0);
 		backOffPolicy.setMaxInterval(10000);
 		retryTemplate.setBackOffPolicy(backOffPolicy);
-		// amqpTemplate.setRetryTemplate(retryTemplate);
+		amqpTemplate.setRetryTemplate(retryTemplate);
 		amqpTemplate.setMessageConverter(messageConverter());
 		amqpTemplate.setExchange(exchange);
+
 	}
 
 	private Jackson2JsonMessageConverter messageConverter() {
@@ -97,12 +106,21 @@ public class AmqpEventPusher implements EventPush {
 		return objectMapper;
 	}
 
-	private ConnectionFactory connectionFactory() {
-		final CachingConnectionFactory factory = new CachingConnectionFactory(host);
+	private ConnectionFactory connectionFactory() throws Exception {
+		final RabbitConnectionFactoryBean rabbitCon = new RabbitConnectionFactoryBean();
+		rabbitCon.setUseSSL(useSsl);
+		rabbitCon.setUsername(username);
+		rabbitCon.setPassword(password);
+		rabbitCon.setHost(host);
+		// rabbitCon.setPort(5672);
+		rabbitCon.afterPropertiesSet();
+
+		final CachingConnectionFactory factory = new CachingConnectionFactory(rabbitCon.getObject());
 
 		factory.setUsername(username);
 		factory.setPassword(password);
-
+		factory.setHost(host);
+		// factory.setPort(5672);
 		return factory;
 	}
 
@@ -182,6 +200,21 @@ public class AmqpEventPusher implements EventPush {
 	 */
 	public void setPushEnabled(final boolean pushEnabled) {
 		this.pushEnabled = pushEnabled;
+	}
+
+	/**
+	 * @return the useSsl
+	 */
+	public boolean isUseSsl() {
+		return useSsl;
+	}
+
+	/**
+	 * @param useSsl
+	 *            the useSsl to set
+	 */
+	public void setUseSsl(final boolean useSsl) {
+		this.useSsl = useSsl;
 	}
 
 }
