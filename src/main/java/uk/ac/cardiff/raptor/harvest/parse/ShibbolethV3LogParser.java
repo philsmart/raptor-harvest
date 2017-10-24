@@ -81,7 +81,7 @@ public class ShibbolethV3LogParser extends BaseLogFileParser {
 
 	@Override
 	public String getName() {
-		return "Shibboleth IDP 2.x/.3.x LogFile Parser";
+		return "Shibboleth IDP 3.x LogFile Parser";
 
 	}
 

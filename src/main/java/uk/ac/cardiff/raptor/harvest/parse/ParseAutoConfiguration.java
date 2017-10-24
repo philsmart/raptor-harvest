@@ -14,7 +14,7 @@ public class ParseAutoConfiguration {
 	@ConfigurationProperties(prefix = "harvest.shibboleth")
 	@Bean("shibIdpParser")
 	public LogParser shibbolethParser() {
-		log.info("Creating Shibboleth Idp Log File Parser");
+		log.info("Creating Shibboleth version 2.x Idp Log File Parser");
 
 		return LogParserFactory.newShibbolethLogParser();
 	}
@@ -23,7 +23,7 @@ public class ParseAutoConfiguration {
 	@ConfigurationProperties(prefix = "harvest.shibbolethv3")
 	@Bean("shibIdpParser")
 	public LogParser shibbolethV3Parser() {
-		log.info("Creating Shibboleth V3 Idp Log File Parser");
+		log.info("Creating Shibboleth version 3.x Idp Log File Parser");
 
 		return LogParserFactory.newShibbolethLogParser();
 	}

@@ -16,6 +16,7 @@ public class LogParserTimerAspect {
 
 	private static final Logger log = LoggerFactory.getLogger(LogParserTimerAspect.class);
 
+	// TODO just around the parse method, not all methods.
 	@Around("execution(* uk.ac.cardiff.raptor.harvest.parse.LogParser.*(..)) || execution(* uk.ac.cardiff.raptor.harvest.comms.EventPush.*(..))")
 	public Object timeParse(final ProceedingJoinPoint pjp) throws Throwable {
 

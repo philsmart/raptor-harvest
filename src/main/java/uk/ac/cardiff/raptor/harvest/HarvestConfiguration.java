@@ -17,8 +17,6 @@ public class HarvestConfiguration {
 
 	@Bean
 	public Harvester harvester() {
-		log.info("Creating the Harvester....");
-
 		return new Harvester();
 	}
 

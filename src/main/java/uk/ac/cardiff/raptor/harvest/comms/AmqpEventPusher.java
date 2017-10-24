@@ -60,7 +60,7 @@ public class AmqpEventPusher implements EventPush {
 
 	private String password = "raptor-pass";
 
-	private final boolean useSSL = false;
+	private boolean useSsl = false;
 
 	/**
 	 * Should always be true for correct execution, can be false for testing.
@@ -70,8 +70,9 @@ public class AmqpEventPusher implements EventPush {
 	@PostConstruct
 	public void setup() throws Exception {
 
-		log.info("Setting up an AMQPEventPusher using queue [{}], exchange [{}], username [{}], SSL [{}], host [{}]",
-				queue, exchange, username, useSSL, host);
+		log.info(
+				"Setting up an AMQPEventPusher using queue [{}], exchange [{}], username [{}], SSL [{}], host [{}], push-enabled [{}]",
+				queue, exchange, username, useSsl, host, pushEnabled);
 
 		amqpTemplate = new RabbitTemplate(connectionFactory());
 		final RetryTemplate retryTemplate = new RetryTemplate();
@@ -107,7 +108,7 @@ public class AmqpEventPusher implements EventPush {
 
 	private ConnectionFactory connectionFactory() throws Exception {
 		final RabbitConnectionFactoryBean rabbitCon = new RabbitConnectionFactoryBean();
-		rabbitCon.setUseSSL(useSSL);
+		rabbitCon.setUseSSL(useSsl);
 		rabbitCon.setUsername(username);
 		rabbitCon.setPassword(password);
 		rabbitCon.setHost(host);
@@ -199,6 +200,21 @@ public class AmqpEventPusher implements EventPush {
 	 */
 	public void setPushEnabled(final boolean pushEnabled) {
 		this.pushEnabled = pushEnabled;
+	}
+
+	/**
+	 * @return the useSsl
+	 */
+	public boolean isUseSsl() {
+		return useSsl;
+	}
+
+	/**
+	 * @param useSsl
+	 *            the useSsl to set
+	 */
+	public void setUseSsl(final boolean useSsl) {
+		this.useSsl = useSsl;
 	}
 
 }
