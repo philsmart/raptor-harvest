@@ -6,9 +6,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import uk.ac.cardiff.raptor.harvest.parse.LogParser;
 import uk.ac.cardiff.raptor.harvest.parse.ParseAutoConfiguration;
 import uk.ac.cardiff.raptor.harvest.parse.ShibbolethLogParser;
 
+/**
+ * <p>
+ * Basic configuration of a {@link Harvester}. Occurs after
+ * {@link ParseAutoConfiguration} so that that harvester can have
+ * {@link LogParser}s injected.
+ * </p>
+ * 
+ *
+ */
 @Configuration
 @Import(ParseAutoConfiguration.class)
 public class HarvestConfiguration {
