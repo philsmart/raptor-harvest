@@ -26,5 +26,5 @@
 	</root>
 
 	<logger name="uk.ac.cardiff" level="DEBUG" />
-	<logger name="org.springframework.retry" level="DEBUG" />
+<!-- 	<logger name="org.springframework.retry" level="DEBUG" /> -->
 </configuration>

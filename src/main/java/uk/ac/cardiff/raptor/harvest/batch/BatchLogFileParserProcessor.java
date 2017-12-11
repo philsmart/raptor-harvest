@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -36,8 +37,9 @@ public class BatchLogFileParserProcessor {
 	private PushPipeline pipeline;
 
 	/**
-	 * Pareses all events from all logfiles from the configured directory (see
-	 * {@link BatchLogFileParserProcessor}, and push them through the
+	 * Parses all events from a single logfile (the first it finds from the
+	 * configured directory {@code batchDirectory} (see
+	 * {@link BatchLogFileParserProcessor}, and pushes them through the
 	 * {@link PushPipeline} that is configured for all parsers that extend the
 	 * {@link BatchLogFileParserProcessor}.
 	 * 
@@ -55,7 +57,10 @@ public class BatchLogFileParserProcessor {
 		try (final DirectoryStream<Path> stream = Files.newDirectoryStream(directory,
 				path -> path.toString().endsWith(".log"))) {
 
-			for (final Path file : stream) {
+			final Iterator<Path> pathIt = stream.iterator();
+			if (pathIt.hasNext()) {
+				final Path file = pathIt.next();
+
 				log.debug("[{}] Parsing log file [{}]", batchParserName, file);
 				final Set<Event> events = parser.parse(file);
 				log.info("Has parsed {} events from {}, now sending", events.size(), file);

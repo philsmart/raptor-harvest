@@ -21,7 +21,7 @@ import uk.ac.cardiff.model.event.ShibbolethIdpAuthenticationEvent;
  *
  */
 @Component
-@ConfigurationProperties(prefix = "harvets.shibboleth")
+@ConfigurationProperties(prefix = "harvests.shibboleth")
 @ThreadSafe
 public class IdpEntityIdEnricher implements AttributeEnrichment {
 

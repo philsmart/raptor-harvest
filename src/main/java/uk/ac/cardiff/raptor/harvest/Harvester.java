@@ -17,24 +17,31 @@ import uk.ac.cardiff.model.event.Event;
 import uk.ac.cardiff.raptor.harvest.parse.LogParser;
 
 /**
- * Central Harvester class the orchestrates the {@link LogParser}s configured.
+ * <p>
+ * Central Harvester class the orchestrates the harvesting of {@link Event}s by
+ * using the {@link LogParser}s configured. Parsing is repeated based on a fixed
+ * schedule.
+ * </p>
  * 
  * @author philsmart
  *
  */
 public class Harvester {
 
+	/** The Constant log. */
 	private static final Logger log = LoggerFactory.getLogger(Harvester.class);
 
-	/**
-	 * List of {@link LogParser}s auto-configured
-	 */
+	/** List of {@link LogParser}s auto-configured. */
 	@Autowired(required = false)
 	private List<LogParser> parsers;
 
+	/** The pipeline. */
 	@Inject
 	private PushPipeline pipeline;
 
+	/**
+	 * Validate.
+	 */
 	@PostConstruct
 	public void validate() {
 
@@ -47,8 +54,8 @@ public class Harvester {
 	}
 
 	/**
-	 * Main harvest method which calls all parsers, gathers all the events, then
-	 * pushes them through the {@link #pushPipeline(List)} method. Relies on Springs
+	 * Main harvest method which calls all parsers, gathers all events, then pushes
+	 * them through the {@link #pushPipeline(List)} method. Relies on Springs
 	 * scheduler. No additional scheduler config, so spring should only ever create
 	 * one scheduler thread? - so can assume a single threaded env from this point
 	 * (although classes should be threadsafe as far as possible).
@@ -64,10 +71,21 @@ public class Harvester {
 		}
 	}
 
+	/**
+	 * Gets the parsers.
+	 *
+	 * @return the parsers
+	 */
 	public List<LogParser> getParsers() {
 		return parsers;
 	}
 
+	/**
+	 * Sets the parsers.
+	 *
+	 * @param parsers
+	 *            the new parsers
+	 */
 	public void setParsers(final List<LogParser> parsers) {
 		this.parsers = parsers;
 	}

@@ -25,7 +25,18 @@ public class BatchParser {
 	@Inject
 	private final List<BatchLogFileParserProcessor> batchParsers = new ArrayList<BatchLogFileParserProcessor>(0);
 
-	@Scheduled(initialDelay = 5000, fixedDelay = 50000)
+	/**
+	 * <p>
+	 * Calls the {@link BatchLogFileParserProcessor#parsePush()} method of all
+	 * configured {@code batchParsers}.
+	 * </p>
+	 * 
+	 * <p>
+	 * This is a scheduled task, executes 5000ms after startup, then the value of
+	 * the property {@code batch.general.rate-ms}ms thereafter.
+	 * </p>
+	 */
+	@Scheduled(initialDelay = 5000, fixedDelayString = "${batch.general.rate-ms}")
 	public void batchParse() {
 		log.info("Batch parser is starting, has {} parsers", batchParsers.size());
 
