@@ -20,7 +20,7 @@ public class IdpEntityIdEnricherTest {
 	@Test
 	public void testEnrichShibbolethEntityIDNoExisting() {
 		final IdpEntityIdEnricher enricher = new IdpEntityIdEnricher();
-		enricher.setIdpEntityID("http://idp.test.org/shibboleth");
+		enricher.setIdpEntityId("http://idp.test.org/shibboleth");
 
 		final ShibbolethIdpAuthenticationEvent mockEvent = new ShibbolethIdpAuthenticationEvent();
 
@@ -37,7 +37,7 @@ public class IdpEntityIdEnricherTest {
 	@Test
 	public void testEnrichShibbolethEntityIDWithExisting() {
 		final IdpEntityIdEnricher enricher = new IdpEntityIdEnricher();
-		enricher.setIdpEntityID("http://idp.test.org/shibboleth");
+		enricher.setIdpEntityId("http://idp.test.org/shibboleth");
 
 		final ShibbolethIdpAuthenticationEvent mockEvent = new ShibbolethIdpAuthenticationEvent();
 		mockEvent.setServiceId("http://idp.test.org/original");
@@ -55,7 +55,7 @@ public class IdpEntityIdEnricherTest {
 	@Test
 	public void testEnrichEzproxyNoException() {
 		final IdpEntityIdEnricher enricher = new IdpEntityIdEnricher();
-		enricher.setIdpEntityID("http://idp.test.org/shibboleth");
+		enricher.setIdpEntityId("http://idp.test.org/shibboleth");
 
 		final EzproxyAuthenticationEvent mockEvent = new EzproxyAuthenticationEvent();
 

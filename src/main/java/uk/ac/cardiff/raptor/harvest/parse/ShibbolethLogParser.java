@@ -48,7 +48,7 @@ public class ShibbolethLogParser extends BaseLogFileParser {
 			event.setEventTime(ParseHelper.safeGetDateTime(splitLine, 0, "yyyyMMdd'T'HHmmss'Z'"));
 
 			event.setRequestBinding(ParseHelper.safeGetString(splitLine, 1));
-			event.setRequestId(ParseHelper.safeGetString(splitLine, 2));
+
 			event.setResourceId(ParseHelper.safeGetString(splitLine, 3));
 
 			final String messageProfileId = ParseHelper.safeGetString(splitLine, 4);

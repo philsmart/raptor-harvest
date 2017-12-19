@@ -21,7 +21,7 @@ public class ShibbolethLogParserTest {
 
 	@Test
 	public void testParseIdp3() throws IOException {
-
+		log.debug("Testing shibboleth V3 parsing");
 		final ShibbolethV3LogParser parser = LogParserFactory.newShibbolethV3LogParser();
 
 		// create tmp file
