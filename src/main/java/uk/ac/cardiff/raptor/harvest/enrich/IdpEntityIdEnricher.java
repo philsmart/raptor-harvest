@@ -21,27 +21,31 @@ import uk.ac.cardiff.model.event.ShibbolethIdpAuthenticationEvent;
  *
  */
 @Component
-@ConfigurationProperties(prefix = "harvests.shibboleth")
+@ConfigurationProperties(prefix = "harvest.shibbolethv2")
 @ThreadSafe
 public class IdpEntityIdEnricher implements AttributeEnrichment {
 
 	private static final Logger log = LoggerFactory.getLogger(IdpEntityIdEnricher.class);
 
 	/**
-	 * The entityID of the {@link Event}s originating Identity Provider. Can be
-	 * null, will not overwrite an existing value. Only applies to
-	 * {@link ShibbolethIdpAuthenticationEvent}s.
+	 * The entityID of the {@link Event}s originating Identity Provider. Can be null
+	 * for no-op functionality. Will not overwrite an existing value. Only applies
+	 * to {@link ShibbolethIdpAuthenticationEvent}s for the Shibboleth V2 parser.
 	 */
-	private String idpEntityID;
+	private String idpEntityId;
 
 	@Override
 	public void enrich(final List<Event> events) {
-		log.info("Enriching ShibbolethIdpAuthenticationEvents in the input list of size {}", events.size());
+		log.info(
+				"Enriching ShibbolethIdpAuthenticationEvents in the input list of size {}, has idp-entity-id specified [{}]",
+				events.size(), idpEntityId != null);
 		for (final Event event : events) {
+
 			if (event instanceof ShibbolethIdpAuthenticationEvent) {
-				if (((ShibbolethIdpAuthenticationEvent) event).getServiceId() == null && idpEntityID != null) {
-					log.trace("Adding idpEntityIdp [{}] as serviceId to event [{}]", idpEntityID, event.getEventId());
-					((ShibbolethIdpAuthenticationEvent) event).setServiceId(idpEntityID);
+
+				if (((ShibbolethIdpAuthenticationEvent) event).getServiceId() == null && idpEntityId != null) {
+					log.trace("Adding idpEntityIdp [{}] as serviceId to event [{}]", idpEntityId, event.getEventId());
+					((ShibbolethIdpAuthenticationEvent) event).setServiceId(idpEntityId);
 				}
 			}
 		}
@@ -50,22 +54,26 @@ public class IdpEntityIdEnricher implements AttributeEnrichment {
 
 	@Override
 	public String getName() {
-		return "Identity Provider EntityID Enricher";
+		return "Identity Provider EntityID Enricher for Shibboleth V2 log files";
 	}
 
 	/**
-	 * @return the idpEntityID
+	 * 
+	 * 
+	 * /**
+	 * 
+	 * @return the idpEntityId
 	 */
-	public String getIdpEntityID() {
-		return idpEntityID;
+	public String getIdpEntityId() {
+		return idpEntityId;
 	}
 
 	/**
-	 * @param idpEntityID
-	 *            the idpEntityID to set
+	 * @param idpEntityId
+	 *            the idpEntityId to set
 	 */
-	public void setIdpEntityID(final String idpEntityID) {
-		this.idpEntityID = idpEntityID;
+	public void setIdpEntityId(final String idpEntityId) {
+		this.idpEntityId = idpEntityId;
 	}
 
 }
