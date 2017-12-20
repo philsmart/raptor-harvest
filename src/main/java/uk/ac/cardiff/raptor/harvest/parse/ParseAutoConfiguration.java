@@ -10,8 +10,8 @@ public class ParseAutoConfiguration {
 
 	private static final Logger log = LoggerFactory.getLogger(ShibbolethLogParser.class);
 
-	@ConditionalOnProperty(prefix = "harvest.shibboleth", name = "logfile")
-	@ConfigurationProperties(prefix = "harvest.shibboleth")
+	@ConditionalOnProperty(prefix = "harvest.shibbolethv2", name = "logfile")
+	@ConfigurationProperties(prefix = "harvest.shibbolethv2")
 	@Bean("shibIdpParser")
 	public LogParser shibbolethParser() {
 		log.info("Creating Shibboleth version 2.x Idp Log File Parser");
@@ -19,8 +19,8 @@ public class ParseAutoConfiguration {
 		return LogParserFactory.newShibbolethLogParser();
 	}
 
-	@ConditionalOnProperty(prefix = "harvest.shibbolethv3", name = "logfile")
-	@ConfigurationProperties(prefix = "harvest.shibbolethv3")
+	@ConditionalOnProperty(prefix = "harvest.shibboleth", name = "logfile")
+	@ConfigurationProperties(prefix = "harvest.shibboleth")
 	@Bean("shibIdpParser")
 	public LogParser shibbolethV3Parser() {
 		log.info("Creating Shibboleth version 3.x Idp Log File Parser");
