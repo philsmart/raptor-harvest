@@ -16,10 +16,24 @@ public class BatchParserAutoConfiguration {
 	@ConfigurationProperties(prefix = "harvest.shibboleth")
 	@Bean("shibIdPBatchParser")
 	public BatchLogFileParserProcessor shibbolethParser() {
-		log.info("Creating Shibboleth Idp Batch Parser");
+		log.info("Creating Shibboleth 3.x Idp Batch Parser");
 		final BatchLogFileParserProcessor shibProcessor = new BatchLogFileParserProcessor();
 		shibProcessor.setParser(new ShibbolethIdPBatchLogFileParser());
-		shibProcessor.setBatchParserName("Shibboleth IdP Batch File Parser");
+		shibProcessor.setBatchParserName("Shibboleth 3.x IdP Batch File Parser");
+		// batch directory is auto configured by Spring.
+
+		return shibProcessor;
+
+	}
+
+	@ConditionalOnProperty(prefix = "harvest.shibbolethv2", name = "batch-directory")
+	@ConfigurationProperties(prefix = "harvest.shibbolethv2")
+	@Bean("shibIdPBatchParser")
+	public BatchLogFileParserProcessor shibbolethParserV2() {
+		log.info("Creating Shibboleth 2.x Idp Batch Parser");
+		final BatchLogFileParserProcessor shibProcessor = new BatchLogFileParserProcessor();
+		shibProcessor.setParser(new ShibbolethIdPBatchLogFileParser());
+		shibProcessor.setBatchParserName("Shibboleth 2.x IdP Batch File Parser");
 		// batch directory is auto configured by Spring.
 
 		return shibProcessor;
