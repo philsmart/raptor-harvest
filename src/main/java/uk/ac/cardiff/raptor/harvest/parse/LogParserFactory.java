@@ -1,5 +1,7 @@
 package uk.ac.cardiff.raptor.harvest.parse;
 
+import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +23,18 @@ public class LogParserFactory {
 	private static final Logger log = LoggerFactory.getLogger(LogParserFactory.class);
 
 	/**
-	 * Factory method to create a new {@link EzproxyLogFileParser}. Sets up a
-	 * number of Regex line filters to capture the correct ezproxy
-	 * authentication events from the exproxy logs.
+	 * Factory method to create a new {@link EzproxyLogFileParser}. Sets up a number
+	 * of Regex line filters to capture the correct ezproxy authentication events
+	 * from the exproxy logs.
+	 * 
+	 * @param principalScope
+	 *            used to set the
+	 *            {@link EzproxyLogFileParser#setPrincipalScope(String)}. Can be
+	 *            null if not needed.
 	 * 
 	 * @return a {@link EzproxyLogFileParser}.
 	 */
-	public static EzproxyLogFileParser newEzproxyLogFileParser() {
+	public static EzproxyLogFileParser newEzproxyLogFileParser(@Nullable final String principalScope) {
 		log.info("Creating Ezproxy Log File Parser");
 
 		final LineFilterEngine lfe = new LineFilterEngine();
@@ -44,14 +51,16 @@ public class LogParserFactory {
 		lfe.setExcludeLineFilters(new LineFilter[] { excludeLineFilter });
 
 		final EzproxyLogFileParser ezproxyParser = new EzproxyLogFileParser();
+		if (principalScope != null) {
+			ezproxyParser.setPrincipalScope(principalScope);
+		}
 		ezproxyParser.setLineFilter(lfe);
 
 		return ezproxyParser;
 	}
 
 	/**
-	 * Factory method to create a new {@link ShibbolethLogParser} (Shibboleth
-	 * V2).
+	 * Factory method to create a new {@link ShibbolethLogParser} (Shibboleth V2).
 	 * 
 	 * @return a {@link ShibbolethLogParser}
 	 */

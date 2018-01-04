@@ -75,6 +75,22 @@ public class BatchLogFileParserProcessor {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("BatchLogFileParserProcessor [batchDirectory=");
+		builder.append(batchDirectory);
+		builder.append(", batchParserName=");
+		builder.append(batchParserName);
+		builder.append("]");
+		return builder.toString();
+	}
+
 	/**
 	 * @return the batchDirectory
 	 */
@@ -118,6 +134,20 @@ public class BatchLogFileParserProcessor {
 	 */
 	public void setParser(final BatchLogFileParser parser) {
 		this.parser = parser;
+	}
+
+	/**
+	 * @return the pipeline
+	 */
+	public PushPipeline getPipeline() {
+		return pipeline;
+	}
+
+	/**
+	 * @param pipeline the pipeline to set
+	 */
+	public void setPipeline(PushPipeline pipeline) {
+		this.pipeline = pipeline;
 	}
 
 }

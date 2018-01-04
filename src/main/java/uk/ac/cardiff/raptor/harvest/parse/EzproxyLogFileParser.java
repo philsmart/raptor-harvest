@@ -16,10 +16,9 @@ import uk.ac.cardiff.model.event.Event;
 import uk.ac.cardiff.model.event.EzproxyAuthenticationEvent;
 
 /**
- * Class to parse Shibboleth Identity Provider 2.x audit log files. Should
- * create a new instance of this class for each different logfile that is parsed
- * (can not be shared for different log files, as keeps track of last entry
- * parsed).
+ * Class to parse Ezproxy log files. Should create a new instance of this class
+ * for each different logfile that is parsed (can not be shared for different
+ * log files, as keeps track of last entry parsed).
  */
 public class EzproxyLogFileParser extends BaseLogFileParser {
 
@@ -98,9 +97,8 @@ public class EzproxyLogFileParser extends BaseLogFileParser {
 	 *            the regex pattern to match
 	 * &#64;param caseSensitive
 	 *            whether the regex is to be treated as case sensitive.
-	 * @return the substring from <code>value</code> that matches the regex
-	 *         pattern in <code>header</code>, or 'error' is no matches are
-	 *         found.
+	 * @return the substring from <code>value</code> that matches the regex pattern
+	 *         in <code>header</code>, or 'error' is no matches are found.
 	 */
 	private String retain(final String value, @Nullable final String regex, final boolean caseSensitive) {
 		if (regex == null) {
@@ -130,6 +128,7 @@ public class EzproxyLogFileParser extends BaseLogFileParser {
 	 * @return the principalScope
 	 */
 	public String getPrincipalScope() {
+
 		return principalScope;
 	}
 
@@ -138,6 +137,7 @@ public class EzproxyLogFileParser extends BaseLogFileParser {
 	 *            the principalScope to set
 	 */
 	public void setPrincipalScope(final String principalScope) {
+		log.trace("Ezproxy parser, setting principal scope to [{}]", principalScope);
 		this.principalScope = principalScope;
 	}
 

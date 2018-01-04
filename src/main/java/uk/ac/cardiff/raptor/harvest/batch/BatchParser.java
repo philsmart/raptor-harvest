@@ -36,9 +36,9 @@ public class BatchParser {
 	 * the property {@code batch.general.rate-ms}ms thereafter.
 	 * </p>
 	 */
-	@Scheduled(initialDelay = 5000, fixedDelayString = "${batch.general.rate-ms}")
+	@Scheduled(initialDelay = 3000, fixedDelayString = "${batch.general.rate-ms}")
 	public void batchParse() {
-		log.info("Batch parser is starting, has {} parsers", batchParsers.size());
+		log.info("Batch parser is starting, has {} parsers [{}]", batchParsers.size(), batchParsers);
 
 		for (final BatchLogFileParserProcessor parser : batchParsers) {
 			parser.parsePush();

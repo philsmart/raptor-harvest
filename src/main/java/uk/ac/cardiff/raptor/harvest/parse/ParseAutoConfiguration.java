@@ -30,8 +30,8 @@ public class ParseAutoConfiguration {
 	@ConfigurationProperties(prefix = "harvest.ezproxy")
 	@Bean("ezproxyParser")
 	public LogParser ezproxyParser() {
-
-		return LogParserFactory.newEzproxyLogFileParser();
+		// null principal scope as this will be auto-configured by spring.
+		return LogParserFactory.newEzproxyLogFileParser(null);
 	}
 
 }

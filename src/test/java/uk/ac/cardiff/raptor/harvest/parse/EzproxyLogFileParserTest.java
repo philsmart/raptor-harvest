@@ -27,7 +27,7 @@ public class EzproxyLogFileParserTest {
 	 */
 	@Test
 	public void testOmittParse() throws IOException {
-		final EzproxyLogFileParser parser = LogParserFactory.newEzproxyLogFileParser();
+		final EzproxyLogFileParser parser = LogParserFactory.newEzproxyLogFileParser("@cardiff.ac.uk");
 
 		// create tmp file
 		final Path tmpLogFile = Files.createTempFile("ezproxy-test-logfile", "log");
@@ -52,7 +52,7 @@ public class EzproxyLogFileParserTest {
 
 	@Test
 	public void testParse() throws IOException {
-		final EzproxyLogFileParser parser = LogParserFactory.newEzproxyLogFileParser();
+		final EzproxyLogFileParser parser = LogParserFactory.newEzproxyLogFileParser("@cardiff.ac.uk");
 
 		// create tmp file
 		final Path tmpLogFile = Files.createTempFile("ezproxy-test-logfile", "log");
@@ -77,7 +77,7 @@ public class EzproxyLogFileParserTest {
 		assertThat(ezevent.getEventTimeMillis()).isEqualTo(1498176282000l);
 
 		assertThat(ezevent.getResourceId()).isEqualTo("http://www.sciencedirect.com");
-
+		assertThat(ezevent.getPrincipalName()).isEqualTo("A2211362R");
 		// delete file on exit
 		tmpLogFile.toFile().delete();
 
@@ -85,7 +85,7 @@ public class EzproxyLogFileParserTest {
 
 	@Test
 	public void testParseSecond() throws IOException {
-		final EzproxyLogFileParser parser = LogParserFactory.newEzproxyLogFileParser();
+		final EzproxyLogFileParser parser = LogParserFactory.newEzproxyLogFileParser("@cardiff.ac.uk");
 
 		// create tmp file
 		final Path tmpLogFile = Files.createTempFile("ezproxy-test-logfile", "log");
@@ -111,6 +111,7 @@ public class EzproxyLogFileParserTest {
 
 		assertThat(ezevent.getResourceId()).isEqualTo("https://link.springer.com");
 		assertThat(ezevent.getServiceHost()).isEqualTo("https://abc.cardiff.ac.uk");
+		assertThat(ezevent.getPrincipalName()).isEqualTo("A1969668V");
 
 		// delete file on exit
 		tmpLogFile.toFile().delete();
@@ -136,7 +137,7 @@ public class EzproxyLogFileParserTest {
 
 	@Test
 	public void testParseThird() throws IOException {
-		final EzproxyLogFileParser parser = LogParserFactory.newEzproxyLogFileParser();
+		final EzproxyLogFileParser parser = LogParserFactory.newEzproxyLogFileParser("@cardiff.ac.uk");
 
 		// create tmp file
 		final Path tmpLogFile = Files.createTempFile("ezproxy-test-logfile", "log");
@@ -162,6 +163,7 @@ public class EzproxyLogFileParserTest {
 
 		assertThat(ezevent.getResourceId()).isEqualTo("https://search.proquest.com");
 		assertThat(ezevent.getServiceHost()).isEqualTo("http://abc.cardiff.ac.uk");
+		assertThat(ezevent.getPrincipalName()).isEqualTo("A2200011A");
 
 		// delete file on exit
 		tmpLogFile.toFile().delete();

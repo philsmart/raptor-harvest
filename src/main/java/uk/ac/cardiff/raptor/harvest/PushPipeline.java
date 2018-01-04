@@ -64,4 +64,18 @@ public class PushPipeline {
 		eventPublisher.push(events);
 	}
 
+	/**
+	 * @return the eventPublisher
+	 */
+	public EventPublisher getEventPublisher() {
+		return eventPublisher;
+	}
+
+	/**
+	 * @param eventPublisher the eventPublisher to set
+	 */
+	public void setEventPublisher(EventPublisher eventPublisher) {
+		this.eventPublisher = eventPublisher;
+	}
+
 }

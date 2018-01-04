@@ -60,4 +60,18 @@ public class EventPublisher {
 
 	}
 
+	/**
+	 * @return the eventPush
+	 */
+	public EventPush getEventPush() {
+		return eventPush;
+	}
+
+	/**
+	 * @param eventPush the eventPush to set
+	 */
+	public void setEventPush(EventPush eventPush) {
+		this.eventPush = eventPush;
+	}
+
 }
