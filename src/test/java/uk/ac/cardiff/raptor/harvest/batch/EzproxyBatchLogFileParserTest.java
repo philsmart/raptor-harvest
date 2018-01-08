@@ -13,30 +13,39 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.cardiff.raptor.harvest.PushPipeline;
-import uk.ac.cardiff.raptor.harvest.comms.AmqpEventPusher;
-import uk.ac.cardiff.raptor.harvest.comms.EventPublisher;
+import uk.ac.cardiff.model.event.Event;
+import uk.ac.cardiff.model.event.EzproxyAuthenticationEvent;
 
 public class EzproxyBatchLogFileParserTest {
 
 	private static final Logger log = LoggerFactory.getLogger(EzproxyBatchLogFileParserTest.class);
 
+	/**
+	 * Just tests the batch parser output, does not test any pipelining of the
+	 * output.
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void testParse() throws IOException {
 		final BatchLogFileParserProcessor ezproxyProcessor = new BatchLogFileParserProcessor();
 		ezproxyProcessor.setParser(new EzproxyBatchLogFileParser("@cardiff.ac.uk"));
 		ezproxyProcessor.setBatchParserName("Ezproxy Batch File Parser");
 
-		final AmqpEventPusher pusher = new AmqpEventPusher();
-		pusher.setPushEnabled(false);
-
-		// TODO create a new PushPipeline that just pushes the event to a callback class
+		// Create a new PushPipeline that just pushes the event to a callback class
 		// which checks the event results.
-		final PushPipeline pipeline = new PushPipeline();
-		final EventPublisher publisher = new EventPublisher();
-		publisher.setEventPush(pusher);
-		pipeline.setEventPublisher(publisher);
-		ezproxyProcessor.setPipeline(pipeline);
+
+		ezproxyProcessor.setPipeline(events -> {
+			// once processed, events are present here
+			events.forEach(e -> log.debug("callback {}", e));
+			assertThat(events).hasSize(1);
+			final Event event = events.iterator().next();
+			assertThat(event).isInstanceOf(EzproxyAuthenticationEvent.class);
+			final EzproxyAuthenticationEvent ezEvent = (EzproxyAuthenticationEvent) event;
+			assertThat(ezEvent.getPrincipalName()).isEqualTo("A2211362R");
+			assertThat(ezEvent.getResourceId()).isEqualTo("http://www.sciencedirect.com");
+			assertThat(ezEvent.getServiceHost()).isEqualTo("https://abc.cardiff.ac.uk");
+		});
 
 		// create tmp file
 
