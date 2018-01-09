@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.cardiff.model.event.Event;
 import uk.ac.cardiff.raptor.harvest.PushPipeline;
+import uk.ac.cardiff.raptor.harvest.SimplePushPipeline;
 
 /**
  * 
@@ -40,7 +41,7 @@ public class BatchLogFileParserProcessor {
 	 * Parses all events from a single logfile (the first it finds from the
 	 * configured directory {@code batchDirectory} (see
 	 * {@link BatchLogFileParserProcessor}, and pushes them through the
-	 * {@link PushPipeline} that is configured for all parsers that extend the
+	 * {@link SimplePushPipeline} that is configured for all parsers that extend the
 	 * {@link BatchLogFileParserProcessor}.
 	 * 
 	 * 
@@ -73,6 +74,22 @@ public class BatchLogFileParserProcessor {
 			return;
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("BatchLogFileParserProcessor [batchDirectory=");
+		builder.append(batchDirectory);
+		builder.append(", batchParserName=");
+		builder.append(batchParserName);
+		builder.append("]");
+		return builder.toString();
 	}
 
 	/**
@@ -118,6 +135,21 @@ public class BatchLogFileParserProcessor {
 	 */
 	public void setParser(final BatchLogFileParser parser) {
 		this.parser = parser;
+	}
+
+	/**
+	 * @return the pipeline
+	 */
+	public PushPipeline getPipeline() {
+		return pipeline;
+	}
+
+	/**
+	 * @param pipeline
+	 *            the pipeline to set
+	 */
+	public void setPipeline(final PushPipeline pipeline) {
+		this.pipeline = pipeline;
 	}
 
 }

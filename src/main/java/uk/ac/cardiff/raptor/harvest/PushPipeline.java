@@ -2,66 +2,37 @@ package uk.ac.cardiff.raptor.harvest;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.annotation.concurrent.ThreadSafe;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
 import uk.ac.cardiff.model.event.Event;
-import uk.ac.cardiff.raptor.harvest.comms.EventPublisher;
-import uk.ac.cardiff.raptor.harvest.enrich.AttributeEnrichment;
 
 /**
- * Simple, hard coded, pre-configured, pipeline used when pushing events. First
- * Enrich {@link Event}s by configured {@code enricher}, then push events using
- * the configured {@code eventPush}
+ * A functional interface for definning a push pipeline for lists of
+ * {@link Event}s. A push pipeline may mutate one ore more {@link Event}s in the
+ * input list. The pipeline should then send the List to some Listening endpoint
+ * -but is not guaranteed to.
  * 
  * @author philsmart
  *
  */
-@Component
-@ThreadSafe
-public class PushPipeline {
-
-	private static final Logger log = LoggerFactory.getLogger(Harvester.class);
-
-	@Nullable
-	@Inject
-	private List<AttributeEnrichment> enrichers;
+// annotation is only for compiler warnings if more than one method specified,
+// otherwise with only one method, it will function as a functional interface
+// anyway
+@FunctionalInterface
+public interface PushPipeline {
 
 	/**
-	 * The publisher used to manage the event send lifecycle.
-	 */
-	@Resource(name = "DefaultEventPublisher")
-	private EventPublisher eventPublisher;
-
-	@PostConstruct
-	private void validate() {
-
-		log.info("Harvester has [{}] enrichers", enrichers != null ? enrichers.size() : "0");
-		if (enrichers != null) {
-			enrichers.forEach(enricher -> log.info("Enricher [{}]", enricher.getName()));
-		}
-	}
-
-	/**
-	 * Simple, hard coded, pre-configured, pipeline used when pushing events.
-	 * First Enrich {@link Event}s by configured {@code enricher}, then push
-	 * events using the configured {@code eventPush}
+	 * <p>
+	 * Push the {@link List} of {@link Event}s to some listening endpoint via a
+	 * defined set of integration stages (pipeline).
+	 * </p>
+	 * 
+	 * <p>
+	 * There is no requirement that any intermediate processing stages are defined,
+	 * and the endpoint is not strictly defined.
+	 * </p>
 	 * 
 	 * @param events
-	 *            the {@link Event}s to push.
+	 *            the {@link Event}s to process and push to some endpoint.
 	 */
-	public void pushPipeline(final List<Event> events) {
-		if (enrichers != null) {
-			enrichers.forEach(enricher -> enricher.enrich(events));
-		}
-		eventPublisher.push(events);
-	}
+	void pushPipeline(List<Event> events);
 
 }
