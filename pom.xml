@@ -5,7 +5,7 @@
 
 	<groupId>uk.ac.cardiff.raptor.harvest</groupId>
 	<artifactId>raptor-harvest</artifactId>
-	<version>0.5.6-SNAPSHOT</version>
+	<version>0.5.6</version>
 	<packaging>jar</packaging>
 
 	<name>raptor-harvest</name>
