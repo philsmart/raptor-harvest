@@ -20,6 +20,6 @@
 		<appender-ref ref="CONSOLE" />
 	</root>
 
-	<logger name="uk.ac.cardiff" level="DEBUG" />
+	<logger name="uk.ac.cardiff" level="trace" />
 	<logger name="org.springframework.retry" level="INFO" />
 </configuration>
